@@ -7,306 +7,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --ink:#0B2E33;
-    --deep-teal:#0F3D40;
-    --teal:#1C6E71;
-    --sky:#4FA3AE;
-    --mist:#EAF3F2;
-    --paper:#F7FAF9;
-    --gold:#C98A3B;
-    --gold-dim:#E7C48F;
-    --line:rgba(11,46,51,0.14);
-    --max:1180px;
-  }
-  *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{
-    margin:0;
-    background:var(--paper);
-    color:var(--ink);
-    font-family:'Work Sans',sans-serif;
-    font-size:16px;
-    line-height:1.6;
-  }
-  h1,h2,h3{
-    font-family:'Fraunces',serif;
-    margin:0 0 0.4em 0;
-    font-weight:600;
-    letter-spacing:-0.01em;
-  }
-  .eyebrow{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:0.72rem;
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-    color:var(--teal);
-    display:inline-block;
-    margin-bottom:0.9em;
-  }
-  a{color:inherit;}
-  img{max-width:100%;display:block;}
-  .wrap{max-width:var(--max);margin:0 auto;padding:0 28px;}
-  .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
-  :focus-visible{outline:3px solid var(--gold);outline-offset:3px;}
-
-  /* ---------- Header ---------- */
-  header{
-    position:sticky;top:0;z-index:50;
-    background:rgba(247,250,249,0.92);
-    backdrop-filter:blur(8px);
-    border-bottom:1px solid var(--line);
-  }
-  .nav-row{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:16px 28px;max-width:var(--max);margin:0 auto;
-  }
-  .brand{
-    display:flex;align-items:center;gap:12px;
-    font-family:'Fraunces',serif;font-weight:600;font-size:1.02rem;
-    text-decoration:none;color:var(--deep-teal);
-  }
-  .brand-mark{
-    width:38px;height:38px;flex:0 0 auto;
-  }
-  .brand-text{line-height:1.15;}
-  .brand-text small{
-    display:block;font-family:'IBM Plex Mono',monospace;font-weight:500;
-    font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);
-  }
-  nav ul{list-style:none;display:flex;gap:28px;margin:0;padding:0;}
-  nav a{
-    text-decoration:none;font-size:0.92rem;font-weight:500;color:var(--ink);
-    position:relative;padding:4px 0;
-  }
-  nav a::after{
-    content:'';position:absolute;left:0;bottom:-2px;width:0;height:2px;
-    background:var(--gold);transition:width .25s ease;
-  }
-  nav a:hover::after{width:100%;}
-  .nav-cta{
-    background:var(--deep-teal);color:#fff !important;padding:9px 18px !important;
-    border-radius:100px;font-weight:600 !important;
-  }
-  .nav-cta::after{display:none;}
-  .menu-btn{display:none;background:none;border:none;cursor:pointer;padding:6px;}
-  .menu-btn span, .menu-btn span::before, .menu-btn span::after{
-    display:block;width:22px;height:2px;background:var(--ink);position:relative;transition:.2s;
-  }
-  .menu-btn span::before, .menu-btn span::after{content:'';position:absolute;left:0;}
-  .menu-btn span::before{top:-7px;}
-  .menu-btn span::after{top:7px;}
-
-  @media (max-width:860px){
-    nav{
-      position:fixed;inset:0 0 0 30%;top:70px;background:var(--paper);
-      transform:translateX(100%);transition:transform .3s ease;
-      border-left:1px solid var(--line);padding:28px;
-    }
-    nav.open{transform:translateX(0);}
-    nav ul{flex-direction:column;gap:22px;}
-    .menu-btn{display:block;}
-  }
-
-  /* ---------- Hero ---------- */
-  .hero{
-    position:relative;overflow:hidden;
-    background:linear-gradient(180deg,var(--deep-teal) 0%, var(--teal) 100%);
-    color:#fff;padding:100px 0 140px;
-  }
-  .hero-grid{
-    display:grid;grid-template-columns:1.1fr 0.9fr;gap:40px;align-items:center;
-  }
-  .hero h1{
-    font-size:clamp(2.3rem,5vw,3.6rem);color:#fff;line-height:1.06;
-  }
-  .hero .eyebrow{color:var(--gold-dim);}
-  .hero p.lead{
-    font-size:1.12rem;max-width:46ch;color:rgba(255,255,255,0.86);margin-bottom:1.8em;
-  }
-  .cta-row{display:flex;gap:14px;flex-wrap:wrap;}
-  .btn{
-    display:inline-block;padding:13px 26px;border-radius:100px;text-decoration:none;
-    font-weight:600;font-size:0.94rem;transition:transform .15s ease, box-shadow .15s ease;
-    border:1px solid transparent;
-  }
-  .btn:hover{transform:translateY(-2px);}
-  .btn-gold{background:var(--gold);color:#20140a;}
-  .btn-gold:hover{box-shadow:0 8px 22px rgba(201,138,59,0.4);}
-  .btn-outline{border-color:rgba(255,255,255,0.5);color:#fff;}
-  .btn-outline:hover{background:rgba(255,255,255,0.1);}
-  .btn-teal{background:var(--deep-teal);color:#fff;}
-  .btn-teal:hover{box-shadow:0 8px 22px rgba(15,61,64,0.35);}
-
-  .river-art{width:100%;height:auto;opacity:0.9;}
-  .hero-figure{
-    position:relative;border-radius:18px;overflow:hidden;
-    aspect-ratio:4/5;background:rgba(255,255,255,0.06);
-    border:1px solid rgba(255,255,255,0.18);
-    display:flex;align-items:center;justify-content:center;
-  }
-
-  .wave-divider{display:block;width:100%;line-height:0;margin-top:-2px;}
-  .wave-divider svg{width:100%;height:70px;display:block;}
-
-  /* ---------- Stat strip ---------- */
-  .stat-strip{
-    background:var(--mist);border-bottom:1px solid var(--line);padding:34px 0;
-  }
-  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center;}
-  .stat-grid strong{
-    display:block;font-family:'Fraunces',serif;font-size:1.9rem;color:var(--deep-teal);
-  }
-  .stat-grid span{font-size:0.86rem;color:var(--teal);}
-  @media (max-width:760px){.stat-grid{grid-template-columns:repeat(2,1fr);}}
-
-  /* ---------- Section basics ---------- */
-  section{padding:88px 0;}
-  .section-head{max-width:640px;margin-bottom:52px;}
-  .section-head p{color:#3c5a5c;font-size:1.03rem;}
-  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;}
-  @media (max-width:860px){.two-col{grid-template-columns:1fr;gap:36px;}}
-
-  .about-figure{
-    aspect-ratio:5/4;border-radius:16px;background:var(--mist);
-    border:1px solid var(--line);position:relative;overflow:hidden;
-  }
-
-  /* ---------- Pipeline / Programs ---------- */
-  .pipeline{position:relative;padding-left:6px;}
-  .pipeline-track{
-    position:absolute;left:29px;top:14px;bottom:14px;width:2px;
-    background:repeating-linear-gradient(to bottom, var(--sky) 0 6px, transparent 6px 13px);
-  }
-  .pipeline-step{
-    display:grid;grid-template-columns:60px 1fr;gap:22px;padding:26px 0;
-    border-bottom:1px solid var(--line);position:relative;
-  }
-  .pipeline-step:last-child{border-bottom:none;}
-  .step-num{
-    width:60px;height:60px;border-radius:50%;background:var(--paper);
-    border:2px solid var(--sky);color:var(--deep-teal);
-    display:flex;align-items:center;justify-content:center;
-    font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:0.95rem;z-index:1;
-  }
-  .step-body h3{font-size:1.18rem;margin-bottom:0.3em;}
-  .step-body p{color:#3c5a5c;margin:0;max-width:60ch;}
-  .step-tag{
-    display:inline-block;margin-top:10px;font-family:'IBM Plex Mono',monospace;
-    font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);
-  }
-
-  /* ---------- Members / partners ---------- */
-  .member-grid{
-    display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
-  }
-  @media (max-width:760px){.member-grid{grid-template-columns:1fr 1fr;}}
-  .member-card{
-    background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px 22px;
-  }
-  .member-card .eyebrow{margin-bottom:0.6em;}
-  .member-card h3{font-size:1.05rem;margin-bottom:0.35em;}
-  .member-card p{font-size:0.92rem;color:#4a6668;margin:0;}
-
-  .bg-mist{background:var(--mist);}
-
-  .campus-pills{
-    display:flex;flex-wrap:wrap;gap:10px;margin-top:22px;
-  }
-  .campus-pill{
-    background:#fff;border:1px solid var(--line);border-radius:100px;
-    padding:9px 18px;font-size:0.88rem;color:var(--deep-teal);font-weight:500;
-  }
-  .subgroup-label{
-    font-family:'IBM Plex Mono',monospace;font-size:0.72rem;letter-spacing:0.1em;
-    text-transform:uppercase;color:var(--teal);margin:44px 0 0;display:block;
-  }
-
-  /* ---------- Resources ---------- */
-  .resource-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
-  @media (max-width:860px){.resource-grid{grid-template-columns:1fr;}}
-  .resource-card{
-    border:1px solid var(--line);border-radius:14px;padding:28px;background:#fff;
-    display:flex;flex-direction:column;gap:14px;height:100%;
-  }
-  .resource-card .icon{
-    width:42px;height:42px;border-radius:10px;background:var(--mist);
-    display:flex;align-items:center;justify-content:center;color:var(--teal);
-  }
-  .resource-card h3{font-size:1.08rem;}
-  .resource-card p{color:#3c5a5c;font-size:0.94rem;margin:0;flex:1;}
-  .resource-card a{font-size:0.88rem;font-weight:600;color:var(--deep-teal);text-decoration:none;}
-  .resource-card a:hover{text-decoration:underline;}
-
-  /* ---------- Events ---------- */
-  .events-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
-  @media (max-width:860px){.events-grid{grid-template-columns:1fr;}}
-  .event-card{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;}
-  .event-date{
-    background:var(--deep-teal);color:#fff;padding:14px 20px;
-    font-family:'IBM Plex Mono',monospace;font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;
-  }
-  .event-body{padding:20px;}
-  .event-body h3{font-size:1.02rem;margin-bottom:0.4em;}
-  .event-body p{font-size:0.9rem;color:#4a6668;margin:0;}
-
-  /* ---------- Contact ---------- */
-  .contact-panel{
-    background:linear-gradient(135deg,var(--deep-teal),var(--teal));
-    color:#fff;border-radius:22px;padding:58px;display:grid;
-    grid-template-columns:1fr 1fr;gap:50px;
-  }
-  @media (max-width:860px){.contact-panel{grid-template-columns:1fr;padding:34px;}}
-  .contact-panel h2{color:#fff;}
-  .contact-panel p{color:rgba(255,255,255,0.82);}
-  .contact-list{list-style:none;padding:0;margin:24px 0 0;display:flex;flex-direction:column;gap:14px;}
-  .contact-list a{text-decoration:none;color:#fff;font-weight:500;}
-  form{display:flex;flex-direction:column;gap:14px;}
-  form label{font-size:0.82rem;font-weight:600;color:rgba(255,255,255,0.85);}
-  form input, form select, form textarea{
-    width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.3);
-    background:rgba(255,255,255,0.08);color:#fff;font-family:inherit;font-size:0.94rem;
-  }
-  form input::placeholder, form textarea::placeholder{color:rgba(255,255,255,0.55);}
-  form button{
-    margin-top:6px;align-self:flex-start;
-  }
-  .form-note{font-size:0.8rem;color:rgba(255,255,255,0.65);margin-top:4px;}
-
-  /* ---------- Footer ---------- */
-  footer{
-    background:var(--ink);color:rgba(255,255,255,0.72);padding:54px 0 30px;font-size:0.9rem;
-  }
-  .footer-grid{
-    display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;margin-bottom:36px;
-  }
-  @media (max-width:760px){.footer-grid{grid-template-columns:1fr;}}
-  footer h4{
-    font-family:'IBM Plex Mono',monospace;font-size:0.72rem;letter-spacing:0.1em;
-    text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:14px;
-  }
-  footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;}
-  footer a{color:rgba(255,255,255,0.78);text-decoration:none;}
-  footer a:hover{color:#fff;}
-  .footer-bottom{
-    border-top:1px solid rgba(255,255,255,0.14);padding-top:22px;
-    display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:0.82rem;color:rgba(255,255,255,0.5);
-  }
-
-  .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease, transform .6s ease;}
-  .reveal.in{opacity:1;transform:none;}
-  @media (prefers-reduced-motion: reduce){
-    .reveal{opacity:1;transform:none;transition:none;}
-    html{scroll-behavior:auto;}
-  }
-</style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
 
 <header>
   <div class="nav-row">
-    <a href="#top" class="brand">
+    <a href="index.html" class="brand">
       <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <circle cx="20" cy="20" r="19" stroke="#1C6E71" stroke-width="1.4"/>
         <path d="M4 24c5-6 8 6 13 0s8-6 13 0" stroke="#4FA3AE" stroke-width="2" fill="none" stroke-linecap="round"/>
@@ -319,7 +27,9 @@
         <li><a href="#about">About</a></li>
         <li><a href="#programs">Programs</a></li>
         <li><a href="#members">Members</a></li>
-        <li><a href="#resources">Resources</a></li>
+        <li><a href="publications.html">Publications</a></li>
+        <li><a href="board.html">Board</a></li>
+        <li><a href="resources.html">Resources</a></li>
         <li><a href="#events">Events</a></li>
         <li><a href="#contact" class="nav-cta">Join Us</a></li>
       </ul>
@@ -475,39 +185,49 @@
     </div>
   </section>
 
-  <!-- RESOURCES -->
-  <section id="resources" class="bg-mist">
+  <!-- MAP -->
+  <section id="map" class="bg-mist">
     <div class="wrap">
       <div class="section-head">
-        <span class="eyebrow">For students</span>
-        <h2>Resources to help you on your path.</h2>
-        <p>Tools, funding, and support for Native and Indigenous students pursuing a health career.</p>
+        <span class="eyebrow">Coalition footprint</span>
+        <h2>Where the coalition reaches across Northern California.</h2>
+        <p>Every member medical school and partner undergraduate campus in the coalition, mapped. Click a pin for details.</p>
       </div>
-      <div class="resource-grid">
-        <div class="resource-card reveal">
-          <div class="icon" aria-hidden="true">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 12h16M4 6h16M4 18h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          </div>
-          <h3>Scholarship guide</h3>
-          <p>A running list of scholarships, fellowships, and tuition-support programs specifically for Native and Indigenous students in health fields.</p>
-          <a href="#contact">Request the guide →</a>
-        </div>
-        <div class="resource-card reveal">
-          <div class="icon" aria-hidden="true">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" stroke="currentColor" stroke-width="2"/></svg>
-          </div>
-          <h3>Mentor matching</h3>
-          <p>Get paired with a Native or Indigenous health professional in your field of interest for one-on-one guidance.</p>
-          <a href="#contact">Request a mentor →</a>
-        </div>
-        <div class="resource-card reveal">
-          <div class="icon" aria-hidden="true">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v14H8l-4 4V4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
-          </div>
-          <h3>Application support</h3>
-          <p>Help with personal statements, letters of recommendation, and navigating medical, dental, nursing, and public health school applications.</p>
-          <a href="#contact">Get support →</a>
-        </div>
+      <div class="map-wrap reveal">
+        <div id="coalitionMap"></div>
+      </div>
+      <div class="map-legend">
+        <span class="legend-item"><span class="legend-dot" style="background:#0F3D40;"></span>Member medical school</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#C98A3B;"></span>Partner undergraduate campus</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#4FA3AE;"></span>Residency program (coming soon)</span>
+      </div>
+      <p class="map-note">Residency programs will be added to the map once that list is finalized.</p>
+    </div>
+  </section>
+
+  <!-- TEASERS -->
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">More from the coalition</span>
+        <h2>Explore further.</h2>
+      </div>
+      <div class="teaser-grid">
+        <a href="publications.html" class="teaser-card reveal">
+          <h3>Publications</h3>
+          <p>Research, articles, and writing published by coalition members.</p>
+          <span class="link-arrow">View publications →</span>
+        </a>
+        <a href="board.html" class="teaser-card reveal">
+          <h3>Board &amp; Founding Members</h3>
+          <p>Meet the founding members of the coalition and each year's board.</p>
+          <span class="link-arrow">Meet the board →</span>
+        </a>
+        <a href="resources.html" class="teaser-card reveal">
+          <h3>Student Resources</h3>
+          <p>Application resources for Native and Indigenous students applying to undergraduate and medical programs.</p>
+          <span class="link-arrow">Browse resources →</span>
+        </a>
       </div>
     </div>
   </section>
@@ -546,7 +266,7 @@
   </section>
 
   <!-- CONTACT -->
-  <section id="contact">
+  <section id="contact" class="bg-mist">
     <div class="wrap">
       <div class="contact-panel">
         <div>
@@ -594,7 +314,7 @@
   <div class="wrap">
     <div class="footer-grid">
       <div>
-        <a href="#top" class="brand" style="color:#fff;margin-bottom:14px;display:inline-flex;">
+        <a href="index.html" class="brand" style="color:#fff;margin-bottom:14px;display:inline-flex;">
           <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <circle cx="20" cy="20" r="19" stroke="#4FA3AE" stroke-width="1.4"/>
             <path d="M4 24c5-6 8 6 13 0s8-6 13 0" stroke="#4FA3AE" stroke-width="2" fill="none" stroke-linecap="round"/>
@@ -609,7 +329,9 @@
           <li><a href="#about">About</a></li>
           <li><a href="#programs">Programs</a></li>
           <li><a href="#members">Members</a></li>
-          <li><a href="#resources">Resources</a></li>
+          <li><a href="publications.html">Publications</a></li>
+          <li><a href="board.html">Board</a></li>
+          <li><a href="resources.html">Resources</a></li>
         </ul>
       </div>
       <div>
@@ -628,46 +350,9 @@
   </div>
 </footer>
 
-<script>
-  document.getElementById('year').textContent = new Date().getFullYear();
-
-  // Mobile nav toggle
-  const menuBtn = document.getElementById('menuBtn');
-  const nav = document.getElementById('nav');
-  menuBtn.addEventListener('click', () => {
-    const open = nav.classList.toggle('open');
-    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-  });
-  nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    nav.classList.remove('open');
-    menuBtn.setAttribute('aria-expanded', 'false');
-  }));
-
-  // Scroll reveal
-  const revealEls = document.querySelectorAll('.reveal');
-  if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('in');
-          io.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.15 });
-    revealEls.forEach(el => io.observe(el));
-  } else {
-    revealEls.forEach(el => el.classList.add('in'));
-  }
-
-  // Contact form (front-end only preview)
-  const form = document.getElementById('contactForm');
-  const note = document.getElementById('formNote');
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    note.textContent = 'Thanks! (Form preview only — connect this to Formspree, Netlify Forms, or your own backend to actually receive messages.)';
-    note.style.color = '#fff';
-  });
-</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="assets/map.js"></script>
+<script src="assets/main.js"></script>
 
 </body>
 </html>
