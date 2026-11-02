@@ -1,7 +1,7 @@
 // Reads events + news from a published Google Sheet (CSV) and fills the page.
 // 1) In Google Sheets: File > Share > Publish to web > pick the sheet tab > "Comma-separated values (.csv)" > Publish.
 // 2) Paste the link it gives you between the quotes below.
-const SHEET_CSV_URL = "";
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSuMZEtoLMkiS9814zq43KUwwUYGxN83BHPM3jzUW7MSYVCop7UvlsJOval5APx-7tasbYzYA6uU2Ax/pubhtml";
 
 function parseCSV(t){
   const rows=[]; let r=[], c="", q=false;
