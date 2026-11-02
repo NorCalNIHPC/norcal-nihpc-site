@@ -30,7 +30,7 @@
         <li><a href="publications.html">Publications</a></li>
         <li><a href="board.html">Board</a></li>
         <li><a href="resources.html">Resources</a></li>
-        <li><a href="#events">Events</a></li>
+        <li><a href="events.html">Events</a></li>
         <li><a href="#contact" class="nav-cta">Join Us</a></li>
       </ul>
     </nav>
@@ -236,10 +236,11 @@
   <section id="events">
     <div class="wrap">
       <div class="section-head">
-        <span class="eyebrow">Events &amp; news</span>
+        <a href="events.html" class="eyebrow" style="text-decoration:none;">Events &amp; news →</a>
         <h2>What's happening in the coalition.</h2>
+        <p><a href="events.html" style="color:var(--teal);font-weight:600;">See all events, news &amp; the archive →</a></p>
       </div>
-      <div class="events-grid">
+      <div class="events-grid" id="upcomingEvents" data-limit="3">
         <div class="event-card reveal">
           <div class="event-date">Every 3rd Thursday</div>
           <div class="event-body">
@@ -338,7 +339,7 @@
         <h4>Connect</h4>
         <ul>
           <li><a href="mailto:info@norcalnihpc.org">info@norcalnihpc.org</a></li>
-          <li><a href="#events">Events</a></li>
+          <li><a href="events.html">Events</a></li>
           <li><a href="#contact">Join the coalition</a></li>
         </ul>
       </div>
@@ -353,6 +354,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="assets/map.js"></script>
 <script src="assets/main.js"></script>
+<script src="assets/events.js"></script>
 
 </body>
 </html>
