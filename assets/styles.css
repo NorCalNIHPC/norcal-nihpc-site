@@ -497,3 +497,10 @@ footer{background:linear-gradient(180deg,#13261B,#0F2A1F);}
 .lb-close{position:fixed;top:18px;right:18px;}
 .lightbox.single .lb-nav{display:none;}
 @media (max-width:600px){.lightbox[open]{flex-wrap:wrap;}.lb-nav{order:2;}.lightbox figure{order:1;width:100%;}}
+
+/* ---- Sheet-driven resource cards ---- */
+.res-thumb{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:12px;background:var(--mist);display:block;}
+.res-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.res-tag{font-size:.75rem;font-weight:600;padding:3px 10px;border-radius:100px;background:var(--mist);color:var(--deep-teal);}
+.res-deadline{font-size:.86rem;font-weight:600;color:var(--gold-deep);}
+.res-links{display:flex;flex-wrap:wrap;gap:6px 18px;}
