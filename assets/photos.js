@@ -1,8 +1,8 @@
 // Photo gallery: reads approved photo submissions from a published Google Sheet tab (CSV).
 // Paste the tab's published CSV link between the first pair of quotes, and your Google Form's
 // link between the second pair (this adds a "Share a photo" button). Leave either blank to skip it.
-const PHOTOS_CSV_URL = "";
-const PHOTO_FORM_URL = "";
+const PHOTOS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSuMZEtoLMkiS9814zq43KUwwUYGxN83BHPM3jzUW7MSYVCop7UvlsJOval5APx-7tasbYzYA6uU2Ax/pub?gid=896645513&single=true&output=csv";
+const PHOTO_FORM_URL = "https://forms.gle/UZyVhzphKHcY25mZ9";
 
 (function(){
   const esc=s=>String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
