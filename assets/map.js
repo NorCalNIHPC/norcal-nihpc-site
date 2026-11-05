@@ -52,26 +52,26 @@ function initCoalitionMap() {
     maxZoom: 19,
   }).addTo(map);
 
-  const medIcon = makeDivIcon('#0F3D40');
-  const campusIcon = makeDivIcon('#C98A3B');
-  const residencyIcon = makeDivIcon('#4FA3AE');
+  const medIcon = makeDivIcon('#173F2E');
+  const campusIcon = makeDivIcon('#C9962F');
+  const residencyIcon = makeDivIcon('#7FB08E');
 
   medicalSchools.forEach(s => {
     L.marker([s.lat, s.lng], { icon: medIcon })
       .addTo(map)
-      .bindPopup(`<div class="map-pin-label">${s.name}</div><div style="font-size:0.8rem;color:#4a6668;">${s.city} · Member medical school</div>`);
+      .bindPopup(`<div class="map-pin-label">${s.name}</div><div style="font-size:0.8rem;color:#4d6657;">${s.city} · Member medical school</div>`);
   });
 
   undergradCampuses.forEach(c => {
     L.marker([c.lat, c.lng], { icon: campusIcon })
       .addTo(map)
-      .bindPopup(`<div class="map-pin-label">${c.name}</div><div style="font-size:0.8rem;color:#4a6668;">Partner undergraduate campus</div>`);
+      .bindPopup(`<div class="map-pin-label">${c.name}</div><div style="font-size:0.8rem;color:#4d6657;">Partner undergraduate campus</div>`);
   });
 
   residencyPrograms.forEach(r => {
     L.marker([r.lat, r.lng], { icon: residencyIcon })
       .addTo(map)
-      .bindPopup(`<div class="map-pin-label">${r.name}</div><div style="font-size:0.8rem;color:#4a6668;">${r.city || ''} · Residency program</div>`);
+      .bindPopup(`<div class="map-pin-label">${r.name}</div><div style="font-size:0.8rem;color:#4d6657;">${r.city || ''} · Residency program</div>`);
   });
 
   // Re-enable scroll zoom once the user clicks into the map

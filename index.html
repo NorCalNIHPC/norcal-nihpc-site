@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23173F2E'/%3E%3Ccircle cx='25' cy='14' r='4.5' fill='%23C9962F'/%3E%3Cpath d='M5 28c5-6 8 4 13-1s9-5 17 1' stroke='%237FB08E' stroke-width='2.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
@@ -15,11 +16,7 @@
 <header>
   <div class="nav-row">
     <a href="index.html" class="brand">
-      <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <circle cx="20" cy="20" r="19" stroke="#1C6E71" stroke-width="1.4"/>
-        <path d="M4 24c5-6 8 6 13 0s8-6 13 0" stroke="#4FA3AE" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <path d="M4 17c5-6 8 6 13 0s8-6 13 0" stroke="#C98A3B" stroke-width="2" fill="none" stroke-linecap="round"/>
-      </svg>
+      <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="20" cy="20" r="19" stroke="currentColor" stroke-opacity=".55" stroke-width="1.4"/><circle cx="25" cy="14" r="4" fill="#C9962F"/><path d="M5 27c5-6 8 4 13-1s9-5 17 1" stroke="#7FB08E" stroke-width="2.2" stroke-linecap="round"/><path d="M8 32c4-4 7 2 12-1s8-3 12 0" stroke="#C9962F" stroke-width="2" stroke-linecap="round" opacity=".9"/></svg>
       <span class="brand-text">NorCal NIHPC<small>Health Professions Coalition</small></span>
     </a>
     <nav id="nav">
@@ -53,18 +50,22 @@
         </div>
       </div>
       <div class="hero-figure" aria-hidden="true">
-        <svg viewBox="0 0 300 360" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-          <rect width="300" height="360" fill="#0B3033"/>
-          <path d="M-10 300 C 60 260, 90 340, 150 290 S 260 240, 320 300" stroke="#4FA3AE" stroke-width="3" fill="none" opacity="0.55"/>
-          <path d="M-10 240 C 60 200, 90 280, 150 230 S 260 180, 320 240" stroke="#C98A3B" stroke-width="3" fill="none" opacity="0.5"/>
-          <path d="M-10 180 C 60 140, 90 220, 150 170 S 260 120, 320 180" stroke="#EAF3F2" stroke-width="2" fill="none" opacity="0.3"/>
-          <circle cx="150" cy="100" r="34" fill="none" stroke="#EAF3F2" stroke-width="1.5" opacity="0.6"/>
-        </svg>
-      </div>
+<svg viewBox="0 0 300 375" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+<defs><linearGradient id="hSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#12392A"/><stop offset=".55" stop-color="#2B6A4C"/><stop offset="1" stop-color="#8DBB9A"/></linearGradient>
+<radialGradient id="hGlow"><stop offset="0" stop-color="#F3D58B" stop-opacity=".9"/><stop offset=".45" stop-color="#E5B654" stop-opacity=".28"/><stop offset="1" stop-color="#C9962F" stop-opacity="0"/></radialGradient>
+<linearGradient id="hRiver" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0D28B"/><stop offset="1" stop-color="#A9D0B4"/></linearGradient></defs>
+<rect width="300" height="375" fill="url(#hSky)"/>
+<circle cx="205" cy="140" r="120" fill="url(#hGlow)"/><circle cx="205" cy="140" r="30" fill="#F1CF84"/>
+<path d="M0 222 C50 186 95 208 140 194 S235 166 300 202 V375 H0Z" fill="#4A8C69" opacity=".85"/>
+<path d="M0 258 C60 228 110 256 170 238 S262 220 300 242 V375 H0Z" fill="#2B6A4C"/>
+<path d="M160 242 C150 266 192 284 174 312 S122 342 128 375 H190 C178 342 228 320 208 298 S178 266 184 242Z" fill="url(#hRiver)" opacity=".92"/>
+<path d="M0 304 C40 284 90 309 130 300 C150 296 160 304 170 316 V375 H0Z" fill="#1B4D37"/>
+<path d="M300 292 C262 280 232 304 205 316 C190 324 180 336 184 375 H300Z" fill="#1B4D37"/>
+<path transform="translate(34 296) scale(0.9)" d="M0 -34 L-9 -12 H-4 L-12 6 H-5 L-14 26 H14 L5 6 H12 L4 -12 H9Z" fill="#12392A"/><path transform="translate(62 304) scale(0.65)" d="M0 -34 L-9 -12 H-4 L-12 6 H-5 L-14 26 H14 L5 6 H12 L4 -12 H9Z" fill="#12392A"/><path transform="translate(14 310) scale(0.7)" d="M0 -34 L-9 -12 H-4 L-12 6 H-5 L-14 26 H14 L5 6 H12 L4 -12 H9Z" fill="#0F2A1F"/><path transform="translate(262 300) scale(0.85)" d="M0 -34 L-9 -12 H-4 L-12 6 H-5 L-14 26 H14 L5 6 H12 L4 -12 H9Z" fill="#12392A"/><path transform="translate(284 308) scale(0.6)" d="M0 -34 L-9 -12 H-4 L-12 6 H-5 L-14 26 H14 L5 6 H12 L4 -12 H9Z" fill="#0F2A1F"/>
+<path d="M0 346 C70 324 120 356 180 351 S262 332 300 344 V375 H0Z" fill="#0F2A1F"/>
+</svg></div>
     </div>
-    <div class="wave-divider" aria-hidden="true">
-      <svg viewBox="0 0 1440 70" preserveAspectRatio="none"><path d="M0,32 C240,70 480,0 720,24 C960,48 1200,10 1440,36 L1440,70 L0,70 Z" fill="var(--paper)"/></svg>
-    </div>
+    <div class="wave-divider" aria-hidden="true"><svg viewBox="0 0 1440 90" preserveAspectRatio="none"><path d="M0,40 C200,90 420,0 700,38 S1180,78 1440,30 V90 H0Z" fill="rgba(237,243,234,.35)"/><path d="M0,58 C240,18 520,86 800,52 S1250,22 1440,56 V90 H0Z" fill="rgba(237,243,234,.65)"/><path d="M0,72 C260,46 560,92 860,66 S1260,50 1440,70 V90 H0Z" fill="#EDF3EA"/></svg></div>
   </section>
 
   <!-- STAT STRIP -->
@@ -87,14 +88,16 @@
         <p>Together, we build a supported pathway for Native undergraduates across Northern California to enter the health professions — connecting students at 17 partner campuses with mentors and community at our three member medical schools.</p>
       </div>
       <div class="about-figure reveal">
-        <svg viewBox="0 0 400 320" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <rect width="400" height="320" fill="#EAF3F2"/>
-          <path d="M0 260 C 80 220, 140 280, 220 230 S 340 190, 400 240 L400 320 L0 320 Z" fill="#CFE6E5"/>
-          <path d="M0 220 C 80 180, 140 240, 220 190 S 340 150, 400 200" stroke="#1C6E71" stroke-width="2" fill="none" opacity="0.5"/>
-          <circle cx="300" cy="90" r="46" fill="#C98A3B" opacity="0.18"/>
-          <circle cx="300" cy="90" r="26" fill="none" stroke="#C98A3B" stroke-width="2"/>
-        </svg>
-      </div>
+<svg viewBox="0 0 400 320" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<defs><linearGradient id="aSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F6F1DC"/><stop offset="1" stop-color="#E3EEDF"/></linearGradient>
+<radialGradient id="aGlow"><stop offset="0" stop-color="#E9C167" stop-opacity=".7"/><stop offset="1" stop-color="#E9C167" stop-opacity="0"/></radialGradient></defs>
+<rect width="400" height="320" fill="url(#aSky)"/>
+<circle cx="300" cy="86" r="90" fill="url(#aGlow)"/><circle cx="300" cy="86" r="26" fill="#D9A93F"/>
+<path d="M0 200 C80 160 150 200 230 176 S350 150 400 180 V320 H0Z" fill="#CFE3D3"/>
+<path d="M0 238 C90 204 160 244 250 220 S350 206 400 226 V320 H0Z" fill="#9CC4A8"/>
+<path d="M0 280 C100 252 190 290 290 268 S370 262 400 272 V320 H0Z" fill="#5E9C7A"/>
+<path d="M205 224 C196 242 232 258 214 278 S176 302 182 320 H216 C208 300 252 288 238 270 S214 242 228 224Z" fill="#E9C167" opacity=".6"/>
+</svg></div>
     </div>
   </section>
 
@@ -197,9 +200,9 @@
         <div id="coalitionMap"></div>
       </div>
       <div class="map-legend">
-        <span class="legend-item"><span class="legend-dot" style="background:#0F3D40;"></span>Member medical school</span>
-        <span class="legend-item"><span class="legend-dot" style="background:#C98A3B;"></span>Partner undergraduate campus</span>
-        <span class="legend-item"><span class="legend-dot" style="background:#4FA3AE;"></span>Residency program (coming soon)</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#173F2E;"></span>Member medical school</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#C9962F;"></span>Partner undergraduate campus</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#7FB08E;"></span>Residency program (coming soon)</span>
       </div>
       <p class="map-note">Residency programs will be added to the map once that list is finalized.</p>
     </div>
@@ -316,10 +319,7 @@
     <div class="footer-grid">
       <div>
         <a href="index.html" class="brand" style="color:#fff;margin-bottom:14px;display:inline-flex;">
-          <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <circle cx="20" cy="20" r="19" stroke="#4FA3AE" stroke-width="1.4"/>
-            <path d="M4 24c5-6 8 6 13 0s8-6 13 0" stroke="#4FA3AE" stroke-width="2" fill="none" stroke-linecap="round"/>
-          </svg>
+          <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="20" cy="20" r="19" stroke="currentColor" stroke-opacity=".55" stroke-width="1.4"/><circle cx="25" cy="14" r="4" fill="#C9962F"/><path d="M5 27c5-6 8 4 13-1s9-5 17 1" stroke="#7FB08E" stroke-width="2.2" stroke-linecap="round"/><path d="M8 32c4-4 7 2 12-1s8-3 12 0" stroke="#C9962F" stroke-width="2" stroke-linecap="round" opacity=".9"/></svg>
           <span class="brand-text">NorCal NIHPC</span>
         </a>
         <p style="max-width:36ch;color:rgba(255,255,255,0.6);">Growing Native and Indigenous health professionals for the communities of Northern California.</p>
