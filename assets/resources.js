@@ -3,6 +3,9 @@
 // to show a "Suggest a resource" button. Leave RESOURCES_CSV_URL blank to keep the built-in placeholder cards.
 const RESOURCES_CSV_URL = "";
 const RESOURCE_FORM_URL = "";
+// Opportunities (scholarships, internships, programs...) come from a second tab, published as CSV.
+const OPPORTUNITIES_CSV_URL = "";
+const OPPORTUNITY_FORM_URL = "";
 
 (function(){
   const esc=s=>String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -38,11 +41,63 @@ const RESOURCE_FORM_URL = "";
     ids.forEach((id,i)=>links.push(`<a href="${fileUrl(id)}" target="_blank" rel="noopener">${ids.length>1?`Download file ${i+1}`:"Download file"} →</a>`));
     return `<div class="resource-card">${media}${tags?`<div class="res-tags">${tags}</div>`:""}<h3>${esc(r.name)}</h3>`+
       (r.description?`<p>${esc(r.description)}</p>`:"")+
-      (r.deadline?`<div class="res-deadline">Deadline: ${esc(r.deadline)}</div>`:"")+
       (links.length?`<div class="res-links">${links.join("")}</div>`:"")+`</div>`;
   }
 
+  // ---- Opportunities ----
+  // Accepts 2027-02-01 or 2/1/2027; anything else (e.g. "Rolling") is kept as text and sorted last.
+  function parseDate(s){
+    let m=/^(\d{4})-(\d{1,2})-(\d{1,2})/.exec(s||"");
+    if(m) return new Date(+m[1],m[2]-1,+m[3]);
+    m=/^(\d{1,2})\/(\d{1,2})\/(\d{4})/.exec(s||"");
+    return m?new Date(+m[3],m[1]-1,+m[2]):null;
+  }
+  const fmt=d=>d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+  function oppCard(o){
+    const ids=driveIds(o.file);
+    const tags=[o.type,o.audienceLabel].filter(Boolean).map(t=>`<span class="res-tag">${esc(t)}</span>`).join("");
+    const when=o.date?`<span class="opp-deadline">Deadline: ${fmt(o.date)}</span>`:(o.deadline?`<span class="opp-deadline rolling">${esc(o.deadline)}</span>`:"");
+    const meta=[o.organization,o.location].filter(Boolean).map(esc).join(" · ");
+    const links=[];
+    if(isUrl(o.link)) links.push(`<a href="${esc(o.link)}" target="_blank" rel="noopener">${esc(o.linktext||"Learn more & apply")} →</a>`);
+    ids.forEach((id,i)=>links.push(`<a href="${fileUrl(id)}" target="_blank" rel="noopener">${ids.length>1?`Download file ${i+1}`:"Download file"} →</a>`));
+    return `<div class="opp-card"><div class="opp-top">${tags}${when}</div><h3>${esc(o.name)}</h3>`+
+      (meta?`<div class="opp-meta">${meta}</div>`:"")+(o.description?`<p>${esc(o.description)}</p>`:"")+
+      (o.eligibility?`<p class="opp-elig"><strong>Who can apply:</strong> ${esc(o.eligibility)}</p>`:"")+
+      (links.length?`<div class="res-links">${links.join("")}</div>`:"")+`</div>`;
+  }
+  async function initOpps(){
+    const share=document.getElementById("opportunityShare");
+    if(share&&OPPORTUNITY_FORM_URL){ share.href=OPPORTUNITY_FORM_URL; share.hidden=false; }
+    const el=document.getElementById("oppList");
+    if(!el||!OPPORTUNITIES_CSV_URL) return;
+    let rows;
+    try{
+      const t=parseCSV(await (await fetch(OPPORTUNITIES_CSV_URL,{cache:"no-store"})).text());
+      const head=t.shift().map(h=>h.toLowerCase().replace(/[^a-z]/g,""));
+      const now=new Date(); now.setHours(0,0,0,0);
+      rows=t.map(r=>{const o={};head.forEach((h,i)=>o[h]=(r[i]||"").trim());
+        const a=audience(o.audience);
+        return {name:o.opportunityname||o.name, type:o.type, organization:o.organization, location:o.location,
+          audience:a, audienceLabel:a==="undergrad"?"Undergraduate":a==="med"?"Medical School":"",
+          description:o.description, eligibility:o.eligibility, link:o.link, linktext:o.linkbuttontext||o.linktext,
+          file:o.file||o.image||o.pdf, deadline:o.deadline, date:parseDate(o.deadline)};
+      }).filter(o=>o.name && !(o.date && o.date<now));
+    }catch(e){ console.error("Could not load opportunities sheet",e); return; }
+    // soonest deadline first; dateless ("Rolling") last
+    rows.sort((a,b)=>(a.date?a.date.getTime():9e15)-(b.date?b.date.getTime():9e15));
+    const pills=[...document.querySelectorAll(".opp-filter .filter-pill")];
+    const show=f=>{
+      pills.forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.filter===f)));
+      const m=rows.filter(o=>f==="all"||o.audience===f||o.audience==="both");
+      el.innerHTML=m.length?m.map(oppCard).join(""):'<p class="photo-empty">No open opportunities right now. Check back soon.</p>';
+    };
+    pills.forEach(b=>b.onclick=()=>show(b.dataset.filter));
+    show("all");
+  }
+
   async function init(){
+    initOpps();
     const share=document.getElementById("resourceShare");
     if(share&&RESOURCE_FORM_URL){ share.href=RESOURCE_FORM_URL; share.hidden=false; }
     if(!RESOURCES_CSV_URL) return;
@@ -53,9 +108,9 @@ const RESOURCE_FORM_URL = "";
       rows=t.map(r=>{const o={};head.forEach((h,i)=>o[h]=(r[i]||"").trim());return {
         name:o.resourcename||o.name, audience:audience(o.audience), category:o.category, type:o.type,
         description:o.description, link:o.link, linktext:o.linkbuttontext||o.linktext, file:o.file||o.image||o.pdf||o.fileimage,
-        deadline:o.deadline, expires:o.expires||o.expirationdate, featured:/^(true|yes|y|1|x)$/i.test(o.featured||""),
+        featured:/^(true|yes|y|1|x)$/i.test(o.featured||""),
         order:parseFloat(o.order)};
-      }).filter(r=>r.name && !(r.expires && r.expires<today()));
+      }).filter(r=>r.name);
     }catch(e){ console.error("Could not load resources sheet",e); return; }
 
     rows.sort((a,b)=>(b.featured-a.featured)||((isNaN(a.order)?9999:a.order)-(isNaN(b.order)?9999:b.order)));
