@@ -1,7 +1,7 @@
 // Fills the Board and Publications pages from Google Sheet tabs published as CSV.
 // Paste each tab's published CSV link between the quotes. Leave blank to keep the page's built-in content.
-const BOARD_CSV_URL = "";
-const PUBLICATIONS_CSV_URL = "";
+const BOARD_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSuMZEtoLMkiS9814zq43KUwwUYGxN83BHPM3jzUW7MSYVCop7UvlsJOval5APx-7tasbYzYA6uU2Ax/pub?gid=829251906&single=true&output=csv";
+const PUBLICATIONS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSuMZEtoLMkiS9814zq43KUwwUYGxN83BHPM3jzUW7MSYVCop7UvlsJOval5APx-7tasbYzYA6uU2Ax/pub?gid=1168173273&single=true&output=csv";
 
 function parseCSV(t){
   const rows=[]; let r=[], c="", q=false;
