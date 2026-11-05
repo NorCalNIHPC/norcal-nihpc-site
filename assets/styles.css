@@ -87,7 +87,7 @@ nav a.active::after{width:100%;}
 .menu-btn span::before{top:-7px;}
 .menu-btn span::after{top:7px;}
 
-@media (max-width:980px){
+@media (max-width:1100px){
   nav{
     position:fixed;inset:0 0 0 26%;top:70px;background:var(--paper);
     transform:translateX(100%);transition:transform .3s ease;
@@ -477,3 +477,23 @@ footer{background:linear-gradient(180deg,#13261B,#0F2A1F);}
 .photo-tile img{width:100%;height:100%;object-fit:cover;}
 .social-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;}
 .social-pill{padding:10px 20px;border-radius:100px;background:#fff;border:1px solid var(--line);text-decoration:none;color:var(--deep-teal);font-weight:600;font-size:.9rem;}
+
+/* ---- Gallery + lightbox ---- */
+.filter-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px;}
+.filter-pill{font:inherit;font-weight:600;font-size:.9rem;padding:9px 20px;border-radius:100px;border:1px solid var(--line);background:#fff;color:var(--deep-teal);cursor:pointer;box-shadow:var(--shadow);}
+.filter-pill[aria-pressed="true"]{background:linear-gradient(135deg,var(--teal),var(--deep-teal));color:#fff;border-color:transparent;}
+.photo-item{margin:0;}
+.photo-item button{display:block;width:100%;aspect-ratio:4/3;padding:0;border:0;border-radius:18px;overflow:hidden;cursor:zoom-in;background:var(--mist);box-shadow:var(--shadow);}
+.photo-item img{width:100%;height:100%;object-fit:cover;display:block;}
+.photo-item figcaption{margin:10px 4px 0;font-size:.88rem;line-height:1.45;color:#41594a;}
+.photo-empty{grid-column:1/-1;color:#5d7566;margin:0;}
+.lightbox{border:0;padding:0;background:transparent;max-width:min(94vw,1100px);width:100%;color:#fff;overflow:visible;}
+.lightbox::backdrop{background:rgba(15,42,31,.88);}
+.lightbox[open]{display:flex;align-items:center;justify-content:center;gap:12px;}
+.lightbox figure{margin:0;text-align:center;min-width:0;}
+.lightbox img{max-width:100%;max-height:78vh;border-radius:14px;display:block;margin:0 auto;}
+.lightbox figcaption{margin-top:14px;font-size:.95rem;}
+.lb-close,.lb-nav{font:inherit;border:0;cursor:pointer;color:#fff;background:rgba(255,255,255,.14);border-radius:50%;width:44px;height:44px;font-size:1.6rem;line-height:1;flex:0 0 auto;}
+.lb-close{position:fixed;top:18px;right:18px;}
+.lightbox.single .lb-nav{display:none;}
+@media (max-width:600px){.lightbox[open]{flex-wrap:wrap;}.lb-nav{order:2;}.lightbox figure{order:1;width:100%;}}
