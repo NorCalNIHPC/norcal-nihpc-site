@@ -1,11 +1,11 @@
 // Resources page: fills the two resource sections from a published Google Sheet tab (CSV).
 // Paste the tab's published CSV link in RESOURCES_CSV_URL, and (optionally) a form link in RESOURCE_FORM_URL
 // to show a "Suggest a resource" button. Leave RESOURCES_CSV_URL blank to keep the built-in placeholder cards.
-const RESOURCES_CSV_URL = "";
-const RESOURCE_FORM_URL = "";
+const RESOURCES_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSuMZEtoLMkiS9814zq43KUwwUYGxN83BHPM3jzUW7MSYVCop7UvlsJOval5APx-7tasbYzYA6uU2Ax/pub?gid=1361184372&single=true&output=csv";
+const RESOURCE_FORM_URL = "https://forms.gle/M2DuwbMsojYtSW3M9";
 // Opportunities (scholarships, internships, programs...) come from a second tab, published as CSV.
-const OPPORTUNITIES_CSV_URL = "";
-const OPPORTUNITY_FORM_URL = "";
+const OPPORTUNITIES_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSuMZEtoLMkiS9814zq43KUwwUYGxN83BHPM3jzUW7MSYVCop7UvlsJOval5APx-7tasbYzYA6uU2Ax/pub?gid=710633766&single=true&output=csv";
+const OPPORTUNITY_FORM_URL = "https://forms.gle/UxbDgCKeSvkTMb636";
 
 (function(){
   const esc=s=>String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -27,8 +27,13 @@ const OPPORTUNITY_FORM_URL = "";
   const fileUrl=id=>`https://drive.google.com/file/d/${id}/view`;
   const isUrl=s=>/^https?:\/\//i.test(s||"");
   const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
-  // "Undergraduate", "Medical School", or "Both" (anything else = Both)
-  const audience=s=>{s=(s||"").toLowerCase();return /under/.test(s)?"undergrad":/med/.test(s)?"med":"both";};
+  // Audience cell may list several ("Pre-med students, Medical students"). Blank/unrecognized = shown to everyone.
+  const AUD_LABEL={high:"High school",premed:"Pre-med",med:"Medical school"};
+  const audience=s=>{s=(s||"").toLowerCase();const a=[];
+    if(/high/.test(s)) a.push("high");
+    if(/pre|under/.test(s)) a.push("premed");
+    if(/medical|med\s*stud|med school|^med/.test(s.replace(/pre-?\s*med\w*/g,""))) a.push("med");
+    return a.length?a:["high","premed","med"];};
 
   const ICON='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h16M4 6h16M4 18h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
 
@@ -37,7 +42,7 @@ const OPPORTUNITY_FORM_URL = "";
     const media=ids.length?`<img class="res-thumb" loading="lazy" src="${thumb(ids[0])}" alt="">`:`<div class="icon" aria-hidden="true">${ICON}</div>`;
     const tags=[r.category,r.type].filter(Boolean).map(t=>`<span class="res-tag">${esc(t)}</span>`).join("");
     const links=[];
-    if(isUrl(r.link)) links.push(`<a href="${esc(r.link)}" target="_blank" rel="noopener">${esc(r.linktext||"Open resource")} →</a>`);
+    if(isUrl(r.link)) links.push(`<a href="${esc(r.link)}" target="_blank" rel="noopener">Learn More →</a>`);
     ids.forEach((id,i)=>links.push(`<a href="${fileUrl(id)}" target="_blank" rel="noopener">${ids.length>1?`Download file ${i+1}`:"Download file"} →</a>`));
     return `<div class="resource-card">${media}${tags?`<div class="res-tags">${tags}</div>`:""}<h3>${esc(r.name)}</h3>`+
       (r.description?`<p>${esc(r.description)}</p>`:"")+
@@ -55,11 +60,11 @@ const OPPORTUNITY_FORM_URL = "";
   const fmt=d=>d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
   function oppCard(o){
     const ids=driveIds(o.file);
-    const tags=[o.type,o.audienceLabel].filter(Boolean).map(t=>`<span class="res-tag">${esc(t)}</span>`).join("");
+    const tags=[o.type].filter(Boolean).map(t=>`<span class="res-tag">${esc(t)}</span>`).join("");
     const when=o.date?`<span class="opp-deadline">Deadline: ${fmt(o.date)}</span>`:(o.deadline?`<span class="opp-deadline rolling">${esc(o.deadline)}</span>`:"");
     const meta=[o.organization,o.location].filter(Boolean).map(esc).join(" · ");
     const links=[];
-    if(isUrl(o.link)) links.push(`<a href="${esc(o.link)}" target="_blank" rel="noopener">${esc(o.linktext||"Learn more & apply")} →</a>`);
+    if(isUrl(o.link)) links.push(`<a href="${esc(o.link)}" target="_blank" rel="noopener">Learn More &amp; Apply →</a>`);
     ids.forEach((id,i)=>links.push(`<a href="${fileUrl(id)}" target="_blank" rel="noopener">${ids.length>1?`Download file ${i+1}`:"Download file"} →</a>`));
     return `<div class="opp-card"><div class="opp-top">${tags}${when}</div><h3>${esc(o.name)}</h3>`+
       (meta?`<div class="opp-meta">${meta}</div>`:"")+(o.description?`<p>${esc(o.description)}</p>`:"")+
@@ -79,7 +84,7 @@ const OPPORTUNITY_FORM_URL = "";
       rows=t.map(r=>{const o={};head.forEach((h,i)=>o[h]=(r[i]||"").trim());
         const a=audience(o.audience);
         return {name:o.opportunityname||o.name, type:o.type, organization:o.organization, location:o.location,
-          audience:a, audienceLabel:a==="undergrad"?"Undergraduate":a==="med"?"Medical School":"",
+          audience:a,
           description:o.description, eligibility:o.eligibility, link:o.link, linktext:o.linkbuttontext||o.linktext,
           file:o.file||o.image||o.pdf, deadline:o.deadline, date:parseDate(o.deadline)};
       }).filter(o=>o.name && !(o.date && o.date<now));
@@ -89,7 +94,7 @@ const OPPORTUNITY_FORM_URL = "";
     const pills=[...document.querySelectorAll(".opp-filter .filter-pill")];
     const show=f=>{
       pills.forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.filter===f)));
-      const m=rows.filter(o=>f==="all"||o.audience===f||o.audience==="both");
+      const m=rows.filter(o=>f==="all"||o.audience.includes(f));
       el.innerHTML=m.length?m.map(oppCard).join(""):'<p class="photo-empty">No open opportunities right now. Check back soon.</p>';
     };
     pills.forEach(b=>b.onclick=()=>show(b.dataset.filter));
@@ -114,9 +119,9 @@ const OPPORTUNITY_FORM_URL = "";
     }catch(e){ console.error("Could not load resources sheet",e); return; }
 
     rows.sort((a,b)=>(b.featured-a.featured)||((isNaN(a.order)?9999:a.order)-(isNaN(b.order)?9999:b.order)));
-    [["resUndergrad","undergrad"],["resMed","med"]].forEach(([id,key])=>{
+    [["resHigh","high"],["resPremed","premed"],["resMed","med"]].forEach(([id,key])=>{
       const el=document.getElementById(id); if(!el) return;
-      const mine=rows.filter(r=>r.audience===key||r.audience==="both");
+      const mine=rows.filter(r=>r.audience.includes(key));
       if(mine.length) el.innerHTML=mine.map(card).join("");
     });
   }

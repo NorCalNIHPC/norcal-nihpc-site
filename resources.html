@@ -39,19 +39,54 @@
   <div class="page-header">
     <div class="wrap">
       <span class="eyebrow">For students</span>
-      <h1>Resources for applying to undergraduate and medical programs.</h1>
+      <h1>Resources for high school, pre-med and medical students.</h1>
       <p>A growing library of guides, links, and application support for Native and Indigenous students, maintained by the coalition.</p>
     </div>
   </div>
 
-  <!-- UNDERGRADUATE RESOURCES -->
+  <!-- HIGH SCHOOL RESOURCES -->
   <section>
     <div class="wrap">
       <div class="section-head">
-        <span class="eyebrow">Applying to undergraduate programs</span>
-        <h2>Getting into and through a partner campus.</h2>
+        <span class="eyebrow">For high school students</span>
+        <h2>Preparing for college and a path into health careers.</h2>
       </div>
-      <div class="resource-grid" id="resUndergrad">
+      <div class="resource-grid" id="resHigh">
+        <div class="resource-card reveal">
+          <div class="icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 12h16M4 6h16M4 18h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <h3>[Resource title]</h3>
+          <p>[Short description of the resource — a guide, scholarship list, or worksheet.]</p>
+          <a href="#">Add link →</a>
+        </div>
+        <div class="resource-card reveal">
+          <div class="icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" stroke="currentColor" stroke-width="2"/></svg>
+          </div>
+          <h3>[Resource title]</h3>
+          <p>[Short description.]</p>
+          <a href="#">Add link →</a>
+        </div>
+        <div class="resource-card reveal">
+          <div class="icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v14H8l-4 4V4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>[Resource title]</h3>
+          <p>[Short description.]</p>
+          <a href="#">Add link →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- PRE-MED RESOURCES -->
+  <section class="bg-mist">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">For pre-med students</span>
+        <h2>Preparing for medical school applications.</h2>
+      </div>
+      <div class="resource-grid" id="resPremed">
         <div class="resource-card reveal">
           <div class="icon" aria-hidden="true">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 12h16M4 6h16M4 18h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -81,11 +116,11 @@
   </section>
 
   <!-- MEDICAL SCHOOL RESOURCES -->
-  <section class="bg-mist">
+  <section>
     <div class="wrap">
       <div class="section-head">
-        <span class="eyebrow">Applying to medical school</span>
-        <h2>Preparing for and getting through the application.</h2>
+        <span class="eyebrow">For medical students</span>
+        <h2>Getting into and through medical school.</h2>
       </div>
       <div class="resource-grid" id="resMed">
         <div class="resource-card reveal">
@@ -119,7 +154,7 @@
   </section>
 
   <!-- OPPORTUNITIES -->
-  <section id="opportunities">
+  <section class="bg-mist" id="opportunities">
     <div class="wrap">
       <div class="section-head">
         <span class="eyebrow">Opportunities</span>
@@ -128,8 +163,9 @@
       </div>
       <div class="filter-row opp-filter" role="group" aria-label="Filter opportunities">
         <button type="button" class="filter-pill" data-filter="all" aria-pressed="true">All</button>
-        <button type="button" class="filter-pill" data-filter="undergrad" aria-pressed="false">Undergraduate</button>
-        <button type="button" class="filter-pill" data-filter="med" aria-pressed="false">Medical School</button>
+        <button type="button" class="filter-pill" data-filter="high" aria-pressed="false">High school</button>
+        <button type="button" class="filter-pill" data-filter="premed" aria-pressed="false">Pre-med</button>
+        <button type="button" class="filter-pill" data-filter="med" aria-pressed="false">Medical students</button>
       </div>
       <div class="opp-list" id="oppList"><p class="photo-empty">Opportunities will appear here once the opportunities sheet is connected.</p></div>
       <p style="margin-top:32px;"><a class="btn btn-teal" id="opportunityShare" href="#" target="_blank" rel="noopener" hidden>Submit an opportunity</a></p>
