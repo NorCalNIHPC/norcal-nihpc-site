@@ -36,11 +36,11 @@ function card(it){
     (it.location?`<p><strong>Where:</strong> ${escHtml(it.location)}</p>`:"")+
     (it.description?`<p>${escHtml(it.description)}</p>`:"")+`</div></div>`;
 }
-// A container with data-keys="ucsf" shows that school's events plus coalition-wide ones.
+// A container with data-keys="ucsf" shows only events hosted by that school (coalition-wide events stay on the main Events page).
 function show(id,items,empty){
   const el=document.getElementById(id); if(!el) return;
   const keys=(el.dataset.keys||"").split(",").filter(Boolean);
-  if(keys.length) items=items.filter(i=>isCoalition(i.school)||keys.some(k=>i.school.toLowerCase().includes(k)));
+  if(keys.length) items=items.filter(i=>!isCoalition(i.school)&&keys.some(k=>i.school.toLowerCase().includes(k)));
   const lim=+el.dataset.limit||items.length;
   el.innerHTML=items.length?items.slice(0,lim).map(card).join(""):`<p style="grid-column:1/-1;color:#5a7678;">${empty}</p>`;
 }

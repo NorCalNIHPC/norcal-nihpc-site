@@ -521,3 +521,6 @@ footer{background:linear-gradient(180deg,#13261B,#0F2A1F);}
 .hero-slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s ease;}
 .hero-slide.on{opacity:1;}
 @media (prefers-reduced-motion:reduce){.hero-slide{transition:none;}}
+
+.eyebrow-link{color:inherit;text-decoration:none;border-bottom:1px solid currentColor;}
+.eyebrow-link:hover{opacity:.75;}
