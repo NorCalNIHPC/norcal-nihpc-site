@@ -24,6 +24,12 @@ function parseDate(s){
 const escHtml=s=>String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fmt=d=>d.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"});
 const isCoalition=h=>!h||/coalition|all schools/i.test(h);
+// Coalition-wide = blank, mentions "coalition"/"all", or lists all three schools (e.g. "Stanford, UCSF, UC Davis")
+const isCoalitionWide=h=>{
+  if(isCoalition(h)||/\ball\b|every/i.test(h)) return true;
+  const l=h.toLowerCase();
+  return [/stanford/,/ucsf/,/davis|ucd/].filter(r=>r.test(l)).length>=3;
+};
 
 function card(it){
   const isNews=it.type==="news";
@@ -40,7 +46,7 @@ function card(it){
 function show(id,items,empty){
   const el=document.getElementById(id); if(!el) return;
   const keys=(el.dataset.keys||"").split(",").filter(Boolean);
-  if(keys.length) items=items.filter(i=>!isCoalition(i.school)&&keys.some(k=>i.school.toLowerCase().includes(k)));
+  if(keys.length) items=items.filter(i=>!isCoalitionWide(i.school)&&keys.some(k=>i.school.toLowerCase().includes(k)));
   const lim=+el.dataset.limit||items.length;
   el.innerHTML=items.length?items.slice(0,lim).map(card).join(""):`<p style="grid-column:1/-1;color:#5a7678;">${empty}</p>`;
 }
