@@ -60,12 +60,31 @@ const PHOTO_FORM_URL = "https://forms.gle/UZyVhzphKHcY25mZ9";
     el.querySelectorAll("button").forEach(b=>b.onclick=()=>openBox(items,+b.dataset.i));
   }
 
+  // Home page: swap the hero illustration for a slow crossfade of recent photos (keeps the illustration if none load)
+  function heroShow(){
+    const fig=document.getElementById("heroFigure"); if(!fig||!photos.length) return;
+    const pool=photos.filter(p=>p.school==="coalition"); const use=(pool.length>=3?pool:photos).slice(-6).reverse();
+    const imgs=[]; let ready=0;
+    use.forEach(p=>{
+      const im=new Image(); im.className="hero-slide"; im.alt=p.desc||""; im.decoding="async";
+      im.onload=()=>{
+        imgs.push(im); fig.appendChild(im);
+        if(++ready===1){ fig.querySelector("svg")&&(fig.querySelector("svg").style.visibility="hidden"); fig.removeAttribute("aria-hidden"); im.classList.add("on"); }
+        if(ready===2 && !matchMedia("(prefers-reduced-motion: reduce)").matches){
+          let i=0; setInterval(()=>{ imgs[i].classList.remove("on"); i=(i+1)%imgs.length; imgs[i].classList.add("on"); },6000);
+        }
+      };
+      im.src=thumb(p.id,1000);
+    });
+  }
+
   async function init(){
     const share=document.getElementById("photoShare");
     if(share&&PHOTO_FORM_URL){ share.href=PHOTO_FORM_URL; share.hidden=false; }
     if(!PHOTOS_CSV_URL) return;
     try{ await load(); }catch(e){ console.error("Could not load photos sheet",e); return; }
 
+    heroShow();
     const school=document.getElementById("schoolPhotos");
     if(school){
       const keys=(school.dataset.keys||"").split(",");
