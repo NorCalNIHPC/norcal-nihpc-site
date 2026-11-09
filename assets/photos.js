@@ -30,9 +30,26 @@ const PHOTO_FORM_URL = "https://forms.gle/UZyVhzphKHcY25mZ9";
     const head=rows.shift().map(h=>h.toLowerCase().replace(/\s+/g,""));
     rows.forEach(r=>{
       const o={}; head.forEach((h,i)=>o[h]=(r[i]||"").trim());
-      driveIds(o.image).forEach(id=>photos.push({id,school:schoolKey(o.school),desc:o.description||o.imagedescription||""}));
+      driveIds(o.image).forEach(id=>photos.push({id,school:schoolKey(o.school),desc:o.description||o.imagedescription||"",event:(o.event||o.whicheventisthisfrom||"").trim()}));
     });
   }
+
+  // ---- photos on past event cards ----
+  const norm=s=>String(s||"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();  // tolerant of commas/spacing differences
+  let loaded=false;
+  function attachStrips(){
+    if(!loaded) return;
+    document.querySelectorAll("#archivedEvents .event-card[data-event], #schoolPast .event-card[data-event]").forEach(card=>{
+      if(card.querySelector(".event-photos")) return;
+      const label=card.dataset.event, mine=photos.filter(p=>p.event&&norm(p.event)===norm(label));
+      if(!mine.length) return;
+      const div=document.createElement("div"); div.className="event-photos";
+      div.innerHTML=mine.slice(0,3).map(p=>`<img loading="lazy" src="${thumb(p.id,400)}" alt="${esc(p.desc)}">`).join("")+
+        `<a href="gallery.html?event=${encodeURIComponent(label)}">See ${mine.length===1?"the photo":`all ${mine.length} photos`} →</a>`;
+      (card.querySelector(".event-body")||card).appendChild(div);
+    });
+  }
+  document.addEventListener("events-rendered",attachStrips);
 
   // ---- lightbox ----
   let list=[], pos=0, box;
@@ -83,6 +100,7 @@ const PHOTO_FORM_URL = "https://forms.gle/UZyVhzphKHcY25mZ9";
     if(share&&PHOTO_FORM_URL){ share.href=PHOTO_FORM_URL; share.hidden=false; }
     if(!PHOTOS_CSV_URL) return;
     try{ await load(); }catch(e){ console.error("Could not load photos sheet",e); return; }
+    loaded=true; attachStrips();
 
     heroShow();
     const school=document.getElementById("schoolPhotos");
@@ -93,9 +111,17 @@ const PHOTO_FORM_URL = "https://forms.gle/UZyVhzphKHcY25mZ9";
     const grid=document.getElementById("galleryGrid");
     if(grid){
       const pills=[...document.querySelectorAll(".filter-pill")];
+      let ev=new URLSearchParams(location.search).get("event")||"", cur="all";
+      const chip=document.createElement("div"); chip.className="event-chip"; grid.before(chip);
       const show=f=>{
+        cur=f;
         pills.forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.filter===f)));
-        render(grid,f==="all"?photos:photos.filter(p=>p.school===f),"No photos here yet.");
+        let items=f==="all"?photos:photos.filter(p=>p.school===f);
+        if(ev) items=items.filter(p=>norm(p.event)===norm(ev));
+        chip.hidden=!ev;
+        chip.innerHTML=ev?`<span>Event: ${esc(ev)}</span><button type="button" aria-label="Show all events">×</button>`:"";
+        const x=chip.querySelector("button"); if(x) x.onclick=()=>{ ev=""; history.replaceState(null,"",location.pathname); show(cur); };
+        render(grid,items,ev?"No photos for this event yet.":"No photos here yet.");
       };
       pills.forEach(b=>b.onclick=()=>show(b.dataset.filter));
       show("all");

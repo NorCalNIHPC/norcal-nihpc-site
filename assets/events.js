@@ -37,7 +37,8 @@ function card(it){
   if(!isNews&&it.end&&it.end>it.date) label+=" – "+fmt(it.end);
   if(it.time) label+=" · "+escHtml(it.time);
   const title=/^https?:/.test(it.link)?`<a href="${escHtml(it.link)}" target="_blank" rel="noopener">${escHtml(it.title)}</a>`:escHtml(it.title);
-  return `<div class="event-card"><div class="event-date">${label}</div><div class="event-body"><h3>${title}</h3>`+
+  const tag=isNews?"":` data-event="${escHtml(it.title+" ("+it.date.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})+")")}"`;
+  return `<div class="event-card"${tag}><div class="event-date">${label}</div><div class="event-body"><h3>${title}</h3>`+
     (isNews?"":`<p><strong>Host:</strong> ${isCoalition(it.school)?"Coalition-wide":escHtml(it.school)}</p>`)+
     (it.location?`<p><strong>Where:</strong> ${escHtml(it.location)}</p>`:"")+
     (it.description?`<p>${escHtml(it.description)}</p>`:"")+`</div></div>`;
@@ -69,6 +70,7 @@ async function loadEvents(){
     show("schoolUpcoming",up,"No upcoming events listed yet — check back soon.");
     show("schoolPast",past,"No past events yet.");
     show("newsList",items.filter(i=>i.type==="news").sort((a,b)=>b.date-a.date),"No news yet.");
+    document.dispatchEvent(new Event("events-rendered"));
   }catch(e){ console.error("Could not load events sheet",e); }
 }
 document.addEventListener("DOMContentLoaded",loadEvents);

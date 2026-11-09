@@ -524,3 +524,12 @@ footer{background:linear-gradient(180deg,#13261B,#0F2A1F);}
 
 .eyebrow-link{color:inherit;text-decoration:none;border-bottom:1px solid currentColor;}
 .eyebrow-link:hover{opacity:.75;}
+
+/* ---- Photos on past events + gallery event chip ---- */
+.event-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:14px;}
+.event-photos img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;background:var(--mist);display:block;}
+.event-photos a{grid-column:1/-1;font-size:.88rem;font-weight:600;color:var(--teal);text-decoration:none;}
+.event-photos a:hover{text-decoration:underline;}
+.event-chip{display:flex;align-items:center;gap:10px;margin:0 0 20px;padding:8px 8px 8px 16px;border-radius:100px;background:var(--mist);color:var(--deep-teal);font-weight:600;font-size:.92rem;width:fit-content;max-width:100%;}
+.event-chip[hidden]{display:none;}
+.event-chip button{font:inherit;border:0;cursor:pointer;width:28px;height:28px;border-radius:50%;background:#fff;color:var(--deep-teal);line-height:1;}
