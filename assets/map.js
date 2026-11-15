@@ -3,6 +3,9 @@
 // Paste the tab's published CSV link in MAP_CSV_URL and the pin-submission form link in MAP_FORM_URL.
 // Tab headers: Name, Type, City, Latitude, Longitude, Website
 const MAP_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSuMZEtoLMkiS9814zq43KUwwUYGxN83BHPM3jzUW7MSYVCop7UvlsJOval5APx-7tasbYzYA6uU2Ax/pub?gid=744648729&single=true&output=csv";
+// Websites for the built-in pins (medical schools and campuses): publish the "Coalition Map – Institutions" sheet as CSV
+// (columns Name, Website) and paste its link here. Popups then show a "Website" link. Leave blank to skip.
+const INSTITUTIONS_CSV_URL = "";
 const MAP_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeViwsa0ISZTvuwyJgZq69n_4NYvrBFNYjsoAlnoxjCMLGmEg/viewform?usp=header";
 
 const medicalSchools = [
@@ -82,6 +85,21 @@ async function loadSubmittedPins(map, icons, existing) {
   } catch (e) { console.error('Could not load map pins sheet', e); }
 }
 
+async function loadInstitutionSites(builtIn) {
+  if (!INSTITUTIONS_CSV_URL) return;
+  try {
+    const rows = parseMapCSV(await (await fetch(INSTITUTIONS_CSV_URL, { cache: 'no-store' })).text());
+    const head = rows.shift().map(h => h.toLowerCase().replace(/[^a-z]/g, ''));
+    const ni = head.indexOf('name'), wi = head.indexOf('website');
+    if (ni < 0 || wi < 0) return;
+    rows.forEach(r => {
+      const hit = builtIn.get((r[ni] || '').trim().toLowerCase()), url = (r[wi] || '').trim();
+      if (!hit || !/^https?:\/\//i.test(url)) return;
+      hit.marker.setPopupContent(hit.html + `<div style="margin-top:6px;"><a href="${escMap(url)}" target="_blank" rel="noopener">Visit website</a></div>`);
+    });
+  } catch (e) { console.error('Could not load institutions sheet', e); }
+}
+
 function initCoalitionMap() {
   const share = document.getElementById('mapShare');
   if (share && MAP_FORM_URL) { share.href = MAP_FORM_URL; share.hidden = false; }
@@ -104,17 +122,17 @@ function initCoalitionMap() {
   const campusIcon = makeDivIcon('#C9962F');
   const residencyIcon = makeDivIcon('#7FB08E');
 
-  medicalSchools.forEach(s => {
-    L.marker([s.lat, s.lng], { icon: medIcon })
-      .addTo(map)
-      .bindPopup(`<div class="map-pin-label">${s.name}</div><div style="font-size:0.8rem;color:#4d6657;">${s.city} · Member medical school</div>`);
-  });
+  const builtIn = new Map();   // name -> { marker, html } so websites can be added to the popup later
+  const addBuiltIn = (p, icon, html) => {
+    const marker = L.marker([p.lat, p.lng], { icon }).addTo(map).bindPopup(html);
+    builtIn.set(p.name.toLowerCase(), { marker, html });
+  };
 
-  undergradCampuses.forEach(c => {
-    L.marker([c.lat, c.lng], { icon: campusIcon })
-      .addTo(map)
-      .bindPopup(`<div class="map-pin-label">${c.name}</div><div style="font-size:0.8rem;color:#4d6657;">Partner undergraduate campus</div>`);
-  });
+  medicalSchools.forEach(s => addBuiltIn(s, medIcon,
+    `<div class="map-pin-label">${s.name}</div><div style="font-size:0.8rem;color:#4d6657;">${s.city} · Member medical school</div>`));
+
+  undergradCampuses.forEach(c => addBuiltIn(c, campusIcon,
+    `<div class="map-pin-label">${c.name}</div><div style="font-size:0.8rem;color:#4d6657;">Partner undergraduate campus</div>`));
 
   residencyPrograms.forEach(r => {
     L.marker([r.lat, r.lng], { icon: residencyIcon })
@@ -123,6 +141,7 @@ function initCoalitionMap() {
   });
 
   const existing = new Set([...medicalSchools, ...undergradCampuses, ...residencyPrograms].map(p => p.name.toLowerCase()));
+  loadInstitutionSites(builtIn);
   loadSubmittedPins(map, { med: medIcon, campus: campusIcon, residency: residencyIcon, highschool: makeDivIcon('#4A7FA7') }, existing);
 
   // Re-enable scroll zoom once the user clicks into the map
