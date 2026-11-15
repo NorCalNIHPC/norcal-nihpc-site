@@ -64,26 +64,38 @@ function parseMapCSV(t) {
 const pinKind = s => { s = (s || '').toLowerCase(); return /high/.test(s) ? 'highschool' : /resid/.test(s) ? 'residency' : /med/.test(s) ? 'med' : 'campus'; };
 const pinLabel = { med: 'Medical school', campus: 'Undergraduate campus', residency: 'Residency program', highschool: 'High school' };
 
+const normName = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+const fixUrl = u => { u = (u || '').trim(); if (!u) return ''; if (/^https?:\/\//i.test(u)) return u; return /^[\w-]+(\.[\w-]+)+(\/|$)/.test(u) ? 'https://' + u : ''; };
+const visitLink = u => `<div style="margin-top:6px;"><a href="${escMap(u)}" target="_blank" rel="noopener">Visit website</a></div>`;
+
 async function loadSubmittedPins(map, icons, builtIn) {
   if (!MAP_CSV_URL) return;
   try {
     const rows = parseMapCSV(await (await fetch(MAP_CSV_URL, { cache: 'no-store' })).text());
-    const head = rows.shift().map(h => h.toLowerCase().replace(/[^a-z]/g, ''));
+    // Headers are matched by their start, so "Website (optional)" or "Name of the program" still work
+    const head = rows.shift().map(h => String(h).toLowerCase().replace(/[^a-z]/g, ''));
+    const col = re => head.findIndex(h => re.test(h));
+    const ix = { name: col(/^name/), type: col(/^type/), city: col(/^city/), lat: col(/^lat/), lng: col(/^lon/), web: col(/^(website|url|link)/) };
+    if (ix.name < 0) { console.error('Map pins sheet: no Name column found. Headers seen:', head); return; }
+    const get = (r, k) => (ix[k] >= 0 ? (r[ix[k]] || '').trim() : '');
+    let matched = 0, added = 0, skipped = 0;
     rows.forEach(r => {
-      const o = {}; head.forEach((h, i) => o[h] = (r[i] || '').trim());
-      const lat = parseFloat(o.latitude), lng = parseFloat(o.longitude);
-      if (!o.name || isNaN(lat) || isNaN(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180) return;
-      const hit = builtIn.get(o.name.toLowerCase());
-      if (hit) {                                                  // already on the map: just add its website to the popup
-        if (/^https?:\/\//i.test(o.website)) hit.marker.setPopupContent(hit.html + `<div style="margin-top:6px;"><a href="${escMap(o.website)}" target="_blank" rel="noopener">Visit website</a></div>`);
+      const name = get(r, 'name'); if (!name) return;
+      const site = fixUrl(get(r, 'web'));
+      const hit = builtIn.get(normName(name));
+      if (hit) {                                   // already on the map: add its website to the popup
+        if (site) { hit.marker.setPopupContent(hit.html + visitLink(site)); matched++; }
         return;
       }
-      const kind = pinKind(o.type);
-      const site = /^https?:\/\//i.test(o.website) ? `<div style="margin-top:4px;"><a href="${escMap(o.website)}" target="_blank" rel="noopener">Website</a></div>` : '';
+      const lat = parseFloat(get(r, 'lat')), lng = parseFloat(get(r, 'lng'));
+      if (isNaN(lat) || isNaN(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180) { skipped++; return; }
+      const kind = pinKind(get(r, 'type')), city = get(r, 'city');
       const legend = document.getElementById('legend-' + kind); if (legend) legend.hidden = false;   // show a legend entry only once a pin of that type exists
       L.marker([lat, lng], { icon: icons[kind] }).addTo(map)
-        .bindPopup(`<div class="map-pin-label">${escMap(o.name)}</div><div style="font-size:0.8rem;color:#4d6657;">${o.city ? escMap(o.city) + ' · ' : ''}${pinLabel[kind]}</div>${site}`);
+        .bindPopup(`<div class="map-pin-label">${escMap(name)}</div><div style="font-size:0.8rem;color:#4d6657;">${city ? escMap(city) + ' · ' : ''}${pinLabel[kind]}</div>${site ? visitLink(site) : ''}`);
+      added++;
     });
+    console.info(`Map pins sheet: ${rows.length} rows, ${matched} websites added to existing pins, ${added} new pins, ${skipped} skipped (missing coordinates).`);
   } catch (e) { console.error('Could not load map pins sheet', e); }
 }
 
@@ -112,7 +124,7 @@ function initCoalitionMap() {
   const builtIn = new Map();   // name -> { marker, html } so websites can be added to the popup later
   const addBuiltIn = (p, icon, html) => {
     const marker = L.marker([p.lat, p.lng], { icon }).addTo(map).bindPopup(html);
-    builtIn.set(p.name.toLowerCase(), { marker, html });
+    builtIn.set(normName(p.name), { marker, html });
   };
 
   medicalSchools.forEach(s => addBuiltIn(s, medIcon,
