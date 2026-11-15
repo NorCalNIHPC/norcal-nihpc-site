@@ -3,7 +3,7 @@
 const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSuMZEtoLMkiS9814zq43KUwwUYGxN83BHPM3jzUW7MSYVCop7UvlsJOval5APx-7tasbYzYA6uU2Ax/pub?gid=1559474219&single=true&output=csv";
 
 // Paste your event/news submission form link between the quotes to show the "Submit" section at the bottom of the Events page.
-const EVENT_FORM_URL = "";
+const EVENT_FORM_URL = "https://forms.gle/vr8odzsFHhWe6wKS8";
 
 function parseCSV(t){
   const rows=[]; let r=[], c="", q=false;
