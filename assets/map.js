@@ -47,10 +47,15 @@ function initCoalitionMap() {
 
   const map = L.map('coalitionMap', { scrollWheelZoom: false }).setView([38.6, -121.7], 6);
 
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
-    maxZoom: 19,
-  }).addTo(map);
+  // CARTO now requires a free API key (request one at https://www.carto.com/basemaps/apikey/ and paste it here).
+  // Until a key is set, the map falls back to OpenStreetMap's standard tiles, which need no key.
+  const CARTO_KEY = "";
+  const tiles = CARTO_KEY
+    ? { url: 'https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=' + CARTO_KEY,
+        attribution: '&copy; OpenStreetMap contributors &copy; CARTO' }
+    : { url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+        attribution: '&copy; OpenStreetMap contributors' };
+  L.tileLayer(tiles.url, { attribution: tiles.attribution, maxZoom: 19 }).addTo(map);
 
   const medIcon = makeDivIcon('#173F2E');
   const campusIcon = makeDivIcon('#C9962F');
