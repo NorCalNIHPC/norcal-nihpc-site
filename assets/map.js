@@ -3,7 +3,7 @@
 // Paste the tab's published CSV link in MAP_CSV_URL and the pin-submission form link in MAP_FORM_URL.
 // Tab headers: Name, Type, City, Latitude, Longitude, Website
 const MAP_CSV_URL = "";
-const MAP_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdXrmi0n55VBr59UeeTHBICq0eQcPag3VNE_O-BqmdnzaXcsw/viewform";
+const MAP_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeViwsa0ISZTvuwyJgZq69n_4NYvrBFNYjsoAlnoxjCMLGmEg/viewform?usp=header";
 
 const medicalSchools = [
   { name: "UC Davis School of Medicine", city: "Sacramento, CA", lat: 38.5449, lng: -121.4636 },
