@@ -60,8 +60,8 @@ function parseMapCSV(t) {
   return rows;
 }
 // Residency first so "Residency program" is never mistaken for "medical"
-const pinKind = s => { s = (s || '').toLowerCase(); return /resid/.test(s) ? 'residency' : /med/.test(s) ? 'med' : 'campus'; };
-const pinLabel = { med: 'Medical school', campus: 'Undergraduate campus', residency: 'Residency program' };
+const pinKind = s => { s = (s || '').toLowerCase(); return /high/.test(s) ? 'highschool' : /resid/.test(s) ? 'residency' : /med/.test(s) ? 'med' : 'campus'; };
+const pinLabel = { med: 'Medical school', campus: 'Undergraduate campus', residency: 'Residency program', highschool: 'High school' };
 
 async function loadSubmittedPins(map, icons, existing) {
   if (!MAP_CSV_URL) return;
@@ -75,6 +75,7 @@ async function loadSubmittedPins(map, icons, existing) {
       if (existing.has(o.name.toLowerCase())) return;           // already on the map
       const kind = pinKind(o.type);
       const site = /^https?:\/\//i.test(o.website) ? `<div style="margin-top:4px;"><a href="${escMap(o.website)}" target="_blank" rel="noopener">Website</a></div>` : '';
+      const legend = document.getElementById('legend-' + kind); if (legend) legend.hidden = false;   // show a legend entry only once a pin of that type exists
       L.marker([lat, lng], { icon: icons[kind] }).addTo(map)
         .bindPopup(`<div class="map-pin-label">${escMap(o.name)}</div><div style="font-size:0.8rem;color:#4d6657;">${o.city ? escMap(o.city) + ' · ' : ''}${pinLabel[kind]}</div>${site}`);
     });
@@ -122,7 +123,7 @@ function initCoalitionMap() {
   });
 
   const existing = new Set([...medicalSchools, ...undergradCampuses, ...residencyPrograms].map(p => p.name.toLowerCase()));
-  loadSubmittedPins(map, { med: medIcon, campus: campusIcon, residency: residencyIcon }, existing);
+  loadSubmittedPins(map, { med: medIcon, campus: campusIcon, residency: residencyIcon, highschool: makeDivIcon('#4A7FA7') }, existing);
 
   // Re-enable scroll zoom once the user clicks into the map
   map.on('focus', () => map.scrollWheelZoom.enable());
