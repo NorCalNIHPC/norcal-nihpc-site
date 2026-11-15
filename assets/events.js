@@ -2,6 +2,9 @@
 // Paste the published CSV link of the Events display tab between the quotes.
 const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSuMZEtoLMkiS9814zq43KUwwUYGxN83BHPM3jzUW7MSYVCop7UvlsJOval5APx-7tasbYzYA6uU2Ax/pub?gid=1559474219&single=true&output=csv";
 
+// Paste your event/news submission form link between the quotes to show the "Submit" section at the bottom of the Events page.
+const EVENT_FORM_URL = "";
+
 function parseCSV(t){
   const rows=[]; let r=[], c="", q=false;
   for(let i=0;i<t.length;i++){
@@ -73,4 +76,8 @@ async function loadEvents(){
     document.dispatchEvent(new Event("events-rendered"));
   }catch(e){ console.error("Could not load events sheet",e); }
 }
-document.addEventListener("DOMContentLoaded",loadEvents);
+document.addEventListener("DOMContentLoaded",()=>{
+  const box=document.getElementById("submit"), btn=document.getElementById("eventShare");
+  if(box&&btn&&EVENT_FORM_URL){ btn.href=EVENT_FORM_URL; box.hidden=false; }
+  loadEvents();
+});
