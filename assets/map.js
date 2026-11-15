@@ -1,5 +1,9 @@
 // Coalition map: medical schools + partner undergraduate campuses.
-// Residency programs will be added as a third layer once that list is provided.
+// Extra pins (residency programs, new campuses...) come from a Google Sheet tab published as CSV.
+// Paste the tab's published CSV link in MAP_CSV_URL and the pin-submission form link in MAP_FORM_URL.
+// Tab headers: Name, Type, City, Latitude, Longitude, Website
+const MAP_CSV_URL = "";
+const MAP_FORM_URL = "";
 
 const medicalSchools = [
   { name: "UC Davis School of Medicine", city: "Sacramento, CA", lat: 38.5449, lng: -121.4636 },
@@ -41,7 +45,45 @@ function makeDivIcon(color) {
   });
 }
 
+const escMap = s => String(s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+function parseMapCSV(t) {
+  const rows = []; let r = [], c = '', q = false;
+  for (let i = 0; i < t.length; i++) {
+    const ch = t[i];
+    if (q) { if (ch === '"') { if (t[i + 1] === '"') { c += '"'; i++; } else q = false; } else c += ch; }
+    else if (ch === '"') q = true;
+    else if (ch === ',') { r.push(c); c = ''; }
+    else if (ch === '\n' || ch === '\r') { if (ch === '\r' && t[i + 1] === '\n') i++; r.push(c); rows.push(r); r = []; c = ''; }
+    else c += ch;
+  }
+  if (c || r.length) { r.push(c); rows.push(r); }
+  return rows;
+}
+// Residency first so "Residency program" is never mistaken for "medical"
+const pinKind = s => { s = (s || '').toLowerCase(); return /resid/.test(s) ? 'residency' : /med/.test(s) ? 'med' : 'campus'; };
+const pinLabel = { med: 'Medical school', campus: 'Undergraduate campus', residency: 'Residency program' };
+
+async function loadSubmittedPins(map, icons, existing) {
+  if (!MAP_CSV_URL) return;
+  try {
+    const rows = parseMapCSV(await (await fetch(MAP_CSV_URL, { cache: 'no-store' })).text());
+    const head = rows.shift().map(h => h.toLowerCase().replace(/[^a-z]/g, ''));
+    rows.forEach(r => {
+      const o = {}; head.forEach((h, i) => o[h] = (r[i] || '').trim());
+      const lat = parseFloat(o.latitude), lng = parseFloat(o.longitude);
+      if (!o.name || isNaN(lat) || isNaN(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180) return;
+      if (existing.has(o.name.toLowerCase())) return;           // already on the map
+      const kind = pinKind(o.type);
+      const site = /^https?:\/\//i.test(o.website) ? `<div style="margin-top:4px;"><a href="${escMap(o.website)}" target="_blank" rel="noopener">Website</a></div>` : '';
+      L.marker([lat, lng], { icon: icons[kind] }).addTo(map)
+        .bindPopup(`<div class="map-pin-label">${escMap(o.name)}</div><div style="font-size:0.8rem;color:#4d6657;">${o.city ? escMap(o.city) + ' · ' : ''}${pinLabel[kind]}</div>${site}`);
+    });
+  } catch (e) { console.error('Could not load map pins sheet', e); }
+}
+
 function initCoalitionMap() {
+  const share = document.getElementById('mapShare');
+  if (share && MAP_FORM_URL) { share.href = MAP_FORM_URL; share.hidden = false; }
   const mapEl = document.getElementById('coalitionMap');
   if (!mapEl || typeof L === 'undefined') return;
 
@@ -78,6 +120,9 @@ function initCoalitionMap() {
       .addTo(map)
       .bindPopup(`<div class="map-pin-label">${r.name}</div><div style="font-size:0.8rem;color:#4d6657;">${r.city || ''} · Residency program</div>`);
   });
+
+  const existing = new Set([...medicalSchools, ...undergradCampuses, ...residencyPrograms].map(p => p.name.toLowerCase()));
+  loadSubmittedPins(map, { med: medIcon, campus: campusIcon, residency: residencyIcon }, existing);
 
   // Re-enable scroll zoom once the user clicks into the map
   map.on('focus', () => map.scrollWheelZoom.enable());
