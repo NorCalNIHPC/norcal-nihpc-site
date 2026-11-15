@@ -2,7 +2,7 @@
 // Extra pins (residency programs, new campuses...) come from a Google Sheet tab published as CSV.
 // Paste the tab's published CSV link in MAP_CSV_URL and the pin-submission form link in MAP_FORM_URL.
 // Tab headers: Name, Type, City, Latitude, Longitude, Website
-const MAP_CSV_URL = "";
+const MAP_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSuMZEtoLMkiS9814zq43KUwwUYGxN83BHPM3jzUW7MSYVCop7UvlsJOval5APx-7tasbYzYA6uU2Ax/pub?gid=744648729&single=true&output=csv";
 const MAP_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeViwsa0ISZTvuwyJgZq69n_4NYvrBFNYjsoAlnoxjCMLGmEg/viewform?usp=header";
 
 const medicalSchools = [
