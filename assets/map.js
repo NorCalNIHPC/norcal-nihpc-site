@@ -1,11 +1,9 @@
 // Coalition map: medical schools + partner undergraduate campuses.
-// Extra pins (residency programs, new campuses...) come from a Google Sheet tab published as CSV.
+// Pins come from a Google Sheet tab published as CSV: new places are added as dots, and rows whose Name matches
+// a built-in pin add a "Visit website" link to that pin's popup.
 // Paste the tab's published CSV link in MAP_CSV_URL and the pin-submission form link in MAP_FORM_URL.
 // Tab headers: Name, Type, City, Latitude, Longitude, Website
 const MAP_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSuMZEtoLMkiS9814zq43KUwwUYGxN83BHPM3jzUW7MSYVCop7UvlsJOval5APx-7tasbYzYA6uU2Ax/pub?gid=744648729&single=true&output=csv";
-// Websites for the built-in pins (medical schools and campuses): publish the "Coalition Map – Institutions" sheet as CSV
-// (columns Name, Website) and paste its link here. Popups then show a "Website" link. Leave blank to skip.
-const INSTITUTIONS_CSV_URL = "";
 const MAP_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeViwsa0ISZTvuwyJgZq69n_4NYvrBFNYjsoAlnoxjCMLGmEg/viewform?usp=header";
 
 const medicalSchools = [
@@ -66,7 +64,7 @@ function parseMapCSV(t) {
 const pinKind = s => { s = (s || '').toLowerCase(); return /high/.test(s) ? 'highschool' : /resid/.test(s) ? 'residency' : /med/.test(s) ? 'med' : 'campus'; };
 const pinLabel = { med: 'Medical school', campus: 'Undergraduate campus', residency: 'Residency program', highschool: 'High school' };
 
-async function loadSubmittedPins(map, icons, existing) {
+async function loadSubmittedPins(map, icons, builtIn) {
   if (!MAP_CSV_URL) return;
   try {
     const rows = parseMapCSV(await (await fetch(MAP_CSV_URL, { cache: 'no-store' })).text());
@@ -75,7 +73,11 @@ async function loadSubmittedPins(map, icons, existing) {
       const o = {}; head.forEach((h, i) => o[h] = (r[i] || '').trim());
       const lat = parseFloat(o.latitude), lng = parseFloat(o.longitude);
       if (!o.name || isNaN(lat) || isNaN(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180) return;
-      if (existing.has(o.name.toLowerCase())) return;           // already on the map
+      const hit = builtIn.get(o.name.toLowerCase());
+      if (hit) {                                                  // already on the map: just add its website to the popup
+        if (/^https?:\/\//i.test(o.website)) hit.marker.setPopupContent(hit.html + `<div style="margin-top:6px;"><a href="${escMap(o.website)}" target="_blank" rel="noopener">Visit website</a></div>`);
+        return;
+      }
       const kind = pinKind(o.type);
       const site = /^https?:\/\//i.test(o.website) ? `<div style="margin-top:4px;"><a href="${escMap(o.website)}" target="_blank" rel="noopener">Website</a></div>` : '';
       const legend = document.getElementById('legend-' + kind); if (legend) legend.hidden = false;   // show a legend entry only once a pin of that type exists
@@ -83,21 +85,6 @@ async function loadSubmittedPins(map, icons, existing) {
         .bindPopup(`<div class="map-pin-label">${escMap(o.name)}</div><div style="font-size:0.8rem;color:#4d6657;">${o.city ? escMap(o.city) + ' · ' : ''}${pinLabel[kind]}</div>${site}`);
     });
   } catch (e) { console.error('Could not load map pins sheet', e); }
-}
-
-async function loadInstitutionSites(builtIn) {
-  if (!INSTITUTIONS_CSV_URL) return;
-  try {
-    const rows = parseMapCSV(await (await fetch(INSTITUTIONS_CSV_URL, { cache: 'no-store' })).text());
-    const head = rows.shift().map(h => h.toLowerCase().replace(/[^a-z]/g, ''));
-    const ni = head.indexOf('name'), wi = head.indexOf('website');
-    if (ni < 0 || wi < 0) return;
-    rows.forEach(r => {
-      const hit = builtIn.get((r[ni] || '').trim().toLowerCase()), url = (r[wi] || '').trim();
-      if (!hit || !/^https?:\/\//i.test(url)) return;
-      hit.marker.setPopupContent(hit.html + `<div style="margin-top:6px;"><a href="${escMap(url)}" target="_blank" rel="noopener">Visit website</a></div>`);
-    });
-  } catch (e) { console.error('Could not load institutions sheet', e); }
 }
 
 function initCoalitionMap() {
@@ -140,9 +127,7 @@ function initCoalitionMap() {
       .bindPopup(`<div class="map-pin-label">${r.name}</div><div style="font-size:0.8rem;color:#4d6657;">${r.city || ''} · Residency program</div>`);
   });
 
-  const existing = new Set([...medicalSchools, ...undergradCampuses, ...residencyPrograms].map(p => p.name.toLowerCase()));
-  loadInstitutionSites(builtIn);
-  loadSubmittedPins(map, { med: medIcon, campus: campusIcon, residency: residencyIcon, highschool: makeDivIcon('#4A7FA7') }, existing);
+  loadSubmittedPins(map, { med: medIcon, campus: campusIcon, residency: residencyIcon, highschool: makeDivIcon('#4A7FA7') }, builtIn);
 
   // Re-enable scroll zoom once the user clicks into the map
   map.on('focus', () => map.scrollWheelZoom.enable());
